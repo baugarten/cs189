@@ -4,10 +4,10 @@
 
 % Main function
 % @params
-%   - data: data points to be split
+%   - path: path to the data to use
 %   - stopping_opt: stopping criteria
 %   - split_opt: splitting criteria
-function [] = decision_tree(data, stopping_opt, split_opt)
+function [] = decision_tree(path, stopping_opt, split_opt)
     [x_train, y_train, x_test, y_test] = loadData(path);
     d_tree = make_tree(x_train, y_train, stopping_opt, split_opt);
     testing_error = test(d_tree, x_test, y_test)
@@ -23,7 +23,8 @@ end
 % @return
 %   d_tree is a struct with two attributes, values and children
 function d_tree = make_tree(x, y, stopping_opt, split_opt)
-    values = children = [];
+    values = [];
+    children = [];
 
     if stopping_opt == 1 and 0, % set threshold
         % sort by all features
