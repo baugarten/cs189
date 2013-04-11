@@ -7,9 +7,11 @@
 %   - path: path to the data to use
 %   - stopping_opt: stopping criteria
 %   - split_opt: splitting criteria
-function [] = decision_tree(path, stopping_opt, split_opt)
+% @usage
+%   - decision_tree('../data/spamData.mat', @num_points_predicate, @entroy_impurity_strategy)
+function [] = decision_tree(path, split_predicate, impurity_strategy)
     [x_train, y_train, x_test, y_test] = loadData(path);
-    d_tree = make_tree(x_train, y_train, stopping_opt, split_opt);
+    d_tree = make_tree(x_train, y_train, split_predicate, impurity_strategy);
     testing_error = test(d_tree, x_test, y_test)
 end
 
@@ -18,19 +20,21 @@ end
 % @params
 %   - x: training points
 %   - y: training labels
-%   - stopping_opt: stopping criteria
-%   - split_opt: splitting criteria
+%   - split_predcicate: given x and y values at a leaf node, returns true iff this leaf node should be split
+%   - impurity_strategy: calculates the impurity of a leaf node given a set of x values and y labels
 % @return
 %   d_tree is a struct with two attributes, values and children
-function d_tree = make_tree(x, y, stopping_opt, split_opt)
+function d_tree = make_tree(x, y, split_predicate, impurity_strategy)
     values = [];
     children = [];
 
-    if stopping_opt == 1 and 0, % set threshold
+    if split_predicate(x, y) % if splitting
         % sort by all features
         [x_sorted, indices] = sort(x);
 
         % calculate entropies (or more generally splitting criteria)
+        % can use impurity_strategy as
+        % val = impurity_strategy(x_left, y_left)
 
         % split on greatest reduction
         x_left = [];
@@ -39,8 +43,8 @@ function d_tree = make_tree(x, y, stopping_opt, split_opt)
         y_right = [];
 
         % decision_tree on both halves
-        d_left = make_tree(x_left, y_left, stopping_opt, split_opt);
-        d_right = make_tree(x_right, y_right, stopping_opt, split_opt);
+        d_left = make_tree(x_left, y_left, split_predicate, impurity_strategy);
+        d_right = make_tree(x_right, y_right, split_predicate, impurity_strategy);
 
         % join together
         values = [values, d_left.values, d_right.values];
