@@ -35,12 +35,27 @@ function d_tree = make_tree(x, y, split_predicate, impurity_strategy)
         % calculate entropies (or more generally splitting criteria)
         % can use impurity_strategy as
         % val = impurity_strategy(x_left, y_left)
+        num_points = size(x_sorted, 1);
+        max_delta_impurity = -1;
+        best_split = -1;
+        for i=1:size(x_sorted, 2) % each dimension
+          for j=1:(num_points - 1) % each row except the last
+            split_value = (x_sorted(j, i) + x_sorted(j+1, i)) / 2;
+            P_l = (j / num_points);
 
-        % split on greatest reduction
-        x_left = [];
-        x_right = [];
-        y_left = [];
-        y_right = [];
+            x_left = x(indices(1:j,i),:); % does this work? I think so
+            x_right = x(indices(j+1:num_points,i),:);
+            y_left = y(indices(1:j,i),:);
+            y_right = y(indices(j+1:num_points,i),:);
+
+            delta_impurity = - P_l * impurity_strategy(x_left, y_left) - ...
+                             (1 - P_l) * impurity_strategy(x_right, y_right);
+            if (delta_impurity > max_delta_impurity)
+              max_delta_impurity = delta_impurity;
+              best_split = split_value; % We have to keep track of this value
+            end
+          end
+        end
 
         % decision_tree on both halves
         d_left = make_tree(x_left, y_left, split_predicate, impurity_strategy);
