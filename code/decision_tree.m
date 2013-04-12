@@ -25,8 +25,9 @@ end
 % @return
 %   d_tree is a struct with two attributes, values and children
 function d_tree = make_tree(x, y, split_predicate, impurity_strategy)
-    values = [];
-    children = [];
+    values = struct('x', x, 'y', y);
+    lchild = [];
+    rchild = [];
 
     if split_predicate(x, y) % if splitting
         % sort by all features
@@ -63,25 +64,29 @@ function d_tree = make_tree(x, y, split_predicate, impurity_strategy)
             end
           end
         end
-        disp('Best split');
-        best_split
-        max_delta_impurity
-        size(x_sorted, 2)
-        num_points
-        size(best_x_left)
-        size(best_x_right)
-        size(best_y_left)
-        size(best_y_right)
-        % decision_tree on both halves
-        d_left = make_tree(best_x_left, best_y_left, split_predicate, impurity_strategy);
-        d_right = make_tree(best_x_right,  best_y_right, split_predicate, impurity_strategy);
+        if max_delta_impurity > 0
+            disp('Best split');
+            best_split
+            max_delta_impurity
+            size(x_sorted, 2)
+            num_points
+            size(best_x_left)
+            size(best_x_right)
+            size(best_y_left)
+            size(best_y_right)
+            % decision_tree on both halves
+            d_left = make_tree(best_x_left, best_y_left, split_predicate, impurity_strategy);
+            d_right = make_tree(best_x_right,  best_y_right, split_predicate, impurity_strategy);
 
-        % join together
-        values = [values, d_left.values, d_right.values];
-        children = [children, d_left.children, d_right.children];
+            % join together
+            values = struct('x', [], 'y', []);
+            lchild = d_left;
+            rchild = d_right;
+        end
     end
+    
 
-    d_tree = struct('values', values, 'children', children);
+    d_tree = struct('values', values, 'lchild', lchild, 'rchild', rchild);
 end
 
 % Calculates information gain
