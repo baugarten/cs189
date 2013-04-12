@@ -28,6 +28,8 @@ function d_tree = make_tree(x, y, split_predicate, impurity_strategy)
     values = struct('x', x, 'y', y);
     lchild = [];
     rchild = [];
+    split_value = NaN;
+    split_dimension = NaN;
 
     if split_predicate(x, y) % if splitting
         % sort by all features
@@ -39,6 +41,7 @@ function d_tree = make_tree(x, y, split_predicate, impurity_strategy)
         num_points = size(x_sorted, 1);
         max_delta_impurity = -1;
         best_split = -1;
+        best_split_dimension = -1;
         for i=1:size(x_sorted, 2) % each dimension
           for j=1:(num_points - 1) % each row except the last
             split_value = (x_sorted(j, i) + x_sorted(j+1, i)) / 2;
@@ -56,7 +59,8 @@ function d_tree = make_tree(x, y, split_predicate, impurity_strategy)
             end
             if (delta_impurity > max_delta_impurity)
               max_delta_impurity = delta_impurity;
-              best_split = split_value; % We have to keep track of this value
+              best_split = split_value; 
+              best_split_dimension = i;
               best_x_left = x_left;
               best_x_right = x_right;
               best_y_left = y_left;
@@ -64,16 +68,7 @@ function d_tree = make_tree(x, y, split_predicate, impurity_strategy)
             end
           end
         end
-        if max_delta_impurity > 0
-            disp('Best split');
-            best_split
-            max_delta_impurity
-            size(x_sorted, 2)
-            num_points
-            size(best_x_left)
-            size(best_x_right)
-            size(best_y_left)
-            size(best_y_right)
+        if max_delta_impurity > 0 % This shouldn't really be here if we have a better split_predicate
             % decision_tree on both halves
             d_left = make_tree(best_x_left, best_y_left, split_predicate, impurity_strategy);
             d_right = make_tree(best_x_right,  best_y_right, split_predicate, impurity_strategy);
@@ -82,11 +77,14 @@ function d_tree = make_tree(x, y, split_predicate, impurity_strategy)
             values = struct('x', [], 'y', []);
             lchild = d_left;
             rchild = d_right;
+            split_value = best_split;
+            split_dimension = best_split_dimension;
         end
     end
     
 
-    d_tree = struct('values', values, 'lchild', lchild, 'rchild', rchild);
+    d_tree = struct('values', values, 'lchild', lchild, 'rchild', rchild, ...
+        'split', split_value, 'split_dim', split_dimension);
 end
 
 % Calculates information gain
