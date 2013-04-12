@@ -53,13 +53,21 @@ function d_tree = make_tree(x, y, split_predicate, impurity_strategy)
             if (delta_impurity > max_delta_impurity)
               max_delta_impurity = delta_impurity;
               best_split = split_value; % We have to keep track of this value
+              best_x_left = x_left;
+              best_x_right = x_right;
+              best_y_left = y_left;
+              best_y_right = y_right;
             end
           end
         end
-
+        disp('Best split');
+        size(best_x_left)
+        size(best_x_right)
+        size(best_y_left)
+        size(best_y_right)
         % decision_tree on both halves
-        d_left = make_tree(x_left, y_left, split_predicate, impurity_strategy);
-        d_right = make_tree(x_right, y_right, split_predicate, impurity_strategy);
+        d_left = make_tree(best_x_left, best_y_left, split_predicate, impurity_strategy);
+        d_right = make_tree(best_x_right,  best_y_right, split_predicate, impurity_strategy);
 
         % join together
         values = [values, d_left.values, d_right.values];
