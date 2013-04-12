@@ -1,4 +1,3 @@
-
 function [ best_feature, best_split ] = find_best_split( data_labels )
 %FIND_BEST_SPLIT Summary of this function goes here
 %   Detailed explanation goes here
@@ -6,25 +5,39 @@ n_datapoints = size(data_labels, 1);
 n_features = size(data_labels, 2) - 1;
 best_info_gain = 0;
 for feature=1:n_features,
+    feature_vect = data_labels(:, feature);
     % get a sorted list of unique values
-    [feature_values, ia, indices] = unique(data_labels(:, feature));
-    num_feature_values = size(feature_values, 1);
+    [feature_values, ia, indices] = unique(feature_vect);
     % sum up labels, grouped by feature value
     spam_counts = accumarray(indices, data_labels(:, end));
     total_counts = accumarray(indices, 1);
-    cumulative_count = cumsum(total_counts);
-    for index=1:num_feature_values,
-        count_leq = cumulative_count(index);
-        frac_spam_leq = sum(spam_counts(1:index)) ./ count_leq;
-        frac_spam_gt = sum(spam_counts(index+1:end)) ./ (n_datapoints - count_leq);
-        H_leq = compute_entropy(frac_spam_leq);
-        H_gt = compute_entropy(frac_spam_gt);
-        info_gain = count_leq .* H_leq + (n_datapoints - count_leq) .* H_gt;
-        if info_gain > best_info_gain
-            best_info_gain = info_gain;
-            best_feature = feature;
-            best_split = feature_values(index);
-        end
+    % get counts for <= and >
+    count_lte = cumsum(total_counts);
+    count_geq = rcumsum(total_counts);
+    % do a cumulative sum from both the bottom and top to get the
+    % percentage of messages classified as spam on either side of the value
+    frac_spam_lte = cumsum(spam_counts) ./ count_lte;
+    frac_spam_geq = rcumsum(spam_counts) ./ count_geq;
+    entropy_lte = compute_entropy(frac_spam_lte);
+    entropy_geq = compute_entropy(frac_spam_geq);
+    entropy_gt = shiftl(entropy_geq, 1);
+    count_gt = shiftl(count_geq, 1);
+    % compute the information gains.
+    info_gains = count_lte .* entropy_lte + count_gt .* entropy_gt;
+    [current_best_gain, index] = max(info_gains);
+    if current_best_gain > best_info_gain
+        best_info_gain = current_best_gain;
+        best_feature = feature;
+        best_split = feature_values(index);
     end
 end
+end
+
+function [ result ] = rcumsum( vector )
+result = flipud(cumsum(flipud(vector)));
+end
+
+function [ shifted ] = shiftl( vector, amount )
+shifted = circshift(vector, -amount);
+shifted(1+size(vector, 1)-amount:end) = 0;
 end
