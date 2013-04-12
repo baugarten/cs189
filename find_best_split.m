@@ -5,18 +5,39 @@ n_datapoints = size(data_labels, 1);
 n_features = size(data_labels, 2) - 1;
 best_info_gain = 0;
 for feature=1:n_features,
-    sorted = sortrows(data_labels, feature);
-    for split=1:n_datapoints,
-        frac_spam_lt = sum(sorted(1:split-1, end)) ./ split;
-        frac_spam_geq = sum(sorted(split:end, end)) ./ (n_datapoints - split);
-        H_lt = compute_entropy(frac_spam_lt);
-        H_geq = compute_entropy(frac_spam_geq);
-        info_gain = split .* H_lt + (n_datapoints - split) .* H_geq;
-        if info_gain > best_info_gain
-            best_info_gain = info_gain;
-            best_feature = feature;
-            best_split = sorted(split, feature);
-        end
+    feature_vect = data_labels(:, feature);
+    % get a sorted list of unique values
+    [feature_values, ia, indices] = unique(feature_vect);
+    % sum up labels, grouped by feature value
+    spam_counts = accumarray(indices, data_labels(:, end));
+    total_counts = accumarray(indices, 1);
+    % get counts for <= and >
+    count_lte = cumsum(total_counts);
+    count_geq = rcumsum(total_counts);
+    % do a cumulative sum from both the bottom and top to get the
+    % percentage of messages classified as spam on either side of the value
+    frac_spam_lte = cumsum(spam_counts) ./ count_lte;
+    frac_spam_geq = rcumsum(spam_counts) ./ count_geq;
+    entropy_lte = compute_entropy(frac_spam_lte);
+    entropy_geq = compute_entropy(frac_spam_geq);
+    entropy_gt = shiftl(entropy_geq, 1);
+    count_gt = shiftl(count_geq, 1);
+    % compute the information gains.
+    info_gains = count_lte .* entropy_lte + count_gt .* entropy_gt;
+    [current_best_gain, index] = max(info_gains);
+    if current_best_gain > best_info_gain
+        best_info_gain = current_best_gain;
+        best_feature = feature;
+        best_split = feature_values(index);
     end
 end
+end
+
+function [ result ] = rcumsum( vector )
+result = flipud(cumsum(flipud(vector)));
+end
+
+function [ shifted ] = shiftl( vector, amount )
+shifted = circshift(vector, -amount);
+shifted(1+size(vector, 1)-amount:end) = 0;
 end

@@ -9,9 +9,9 @@ else
     data_labels = sortrows(data_labels, feature);
     feature_column = data_labels(:, feature);
     index = find(feature_column <= split, 1, 'last');
-    lte_data_labels = data_labels(1:index-1, :);
+    lte_data_labels = data_labels(1:index, :);
     lte_node = build_node_recursive(lte_data_labels);
-    gt_data_labels = data_labels(index:end, :);
+    gt_data_labels = data_labels(index+1:end, :);
     gt_node = build_node_recursive(gt_data_labels);
     node = struct('is_leaf', false, 'feature', feature, 'split', split, 'lte', lte_node, 'gt', gt_node);
 end

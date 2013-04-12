@@ -1,10 +1,8 @@
 function [ entropy ] = compute_entropy( frac )
 %COMPUTE_ENTROPY Summary of this function goes here
 %   Detailed explanation goes here
-if frac == 0 || frac == 1
-    entropy = 0;
-else
-    entropy = - frac * log(frac) - (1 - frac) * log(1 - frac);
-end
+entropy = - frac .* log(frac) - (1 - frac) .* log(1 - frac);
+% Correct the limit case (0 or 1) by replacing NaNs with 0
+entropy(isnan(entropy)) = 0;
 end
 
