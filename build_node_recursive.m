@@ -1,7 +1,6 @@
 function [ node ] = build_node_recursive( data_labels )
 %BUILD_NODE_RECURSIVE Summary of this function goes here
 %   Detailed explanation goes here
-fprintf('Building a tree from %d nodes\n', size(data_labels, 1));
 labels = data_labels(:, end);
 if all(labels == labels(1))
     node = build_leaf(labels);
