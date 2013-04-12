@@ -3,7 +3,7 @@ function [ best_feature, best_split ] = find_best_split( data_labels )
 %   Detailed explanation goes here
 n_datapoints = size(data_labels, 1);
 n_features = size(data_labels, 2) - 1;
-best_info_gain = 0;
+min_entropy = Inf;
 for feature=1:n_features,
     feature_vect = data_labels(:, feature);
     % get a sorted list of unique values
@@ -23,10 +23,10 @@ for feature=1:n_features,
     entropy_gt = shiftl(entropy_geq, 1);
     count_gt = shiftl(count_geq, 1);
     % compute the information gains.
-    info_gains = count_lte .* entropy_lte + count_gt .* entropy_gt;
-    [current_best_gain, index] = max(info_gains);
-    if current_best_gain > best_info_gain
-        best_info_gain = current_best_gain;
+    new_entropy = count_lte .* entropy_lte + count_gt .* entropy_gt;
+    [current_min_entropy, index] = min(new_entropy);
+    if current_min_entropy < min_entropy
+        min_entropy = current_min_entropy;
         best_feature = feature;
         best_split = feature_values(index);
     end
