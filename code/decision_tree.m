@@ -50,6 +50,9 @@ function d_tree = make_tree(x, y, split_predicate, impurity_strategy)
 
             delta_impurity = - P_l * impurity_strategy(x_left, y_left) - ...
                              (1 - P_l) * impurity_strategy(x_right, y_right);
+            if isnan(delta_impurity)
+                delta_impurity = 0;
+            end
             if (delta_impurity > max_delta_impurity)
               max_delta_impurity = delta_impurity;
               best_split = split_value; % We have to keep track of this value
@@ -61,6 +64,10 @@ function d_tree = make_tree(x, y, split_predicate, impurity_strategy)
           end
         end
         disp('Best split');
+        best_split
+        max_delta_impurity
+        size(x_sorted, 2)
+        num_points
         size(best_x_left)
         size(best_x_right)
         size(best_y_left)
