@@ -1,10 +1,15 @@
-function [ best_feature, best_split ] = find_best_split( data_labels )
+function [ best_feature, best_split ] = find_best_split( data_labels, num_features )
 %FIND_BEST_SPLIT Summary of this function goes here
 %   Detailed explanation goes here
 n_datapoints = size(data_labels, 1);
 n_features = size(data_labels, 2) - 1;
 min_entropy = Inf;
-for feature=1:n_features,
+if nargin < 2
+    features = 1:n_features;
+else
+    features = 1 + (n_features-1).*rand(num_features,1);
+end
+for feature=features,
     feature_vect = data_labels(:, feature);
     % get a sorted list of unique values
     [feature_values, ia, indices] = unique(feature_vect);

@@ -1,11 +1,16 @@
-function [ node ] = build_node_recursive( data_labels )
+function [ node ] = build_node_recursive( data_labels, num_features)
 %BUILD_NODE_RECURSIVE Summary of this function goes here
 %   Detailed explanation goes here
 labels = data_labels(:, end);
+
 if all(labels == labels(1))
     node = build_leaf(labels);
 else
-    [feature, split] = find_best_split(data_labels);
+    if nargin < 2
+        [feature, split] = find_best_split(data_labels);
+    else
+        [feature, split] = find_best_split(data_labels, num_features);
+    end
     data_labels = sortrows(data_labels, feature);
     feature_column = data_labels(:, feature);
     index = find(feature_column <= split, 1, 'last');
