@@ -7,9 +7,11 @@ min_entropy = Inf;
 if nargin < 2
     features = 1:n_features;
 else
-    features = 1 + (n_features-1).*rand(num_features,1);
+    features = randsample(n_features, num_features); 
 end
-for feature=features,
+for i=1:size(features, 1)
+    feature = features(i);
+    
     feature_vect = data_labels(:, feature);
     % get a sorted list of unique values
     [feature_values, ia, indices] = unique(feature_vect);
