@@ -9,5 +9,5 @@ function label = forest_classify(forest, data_point)
     end
 
     % take majority vote
-    label =  round(num_pos / num_trees);
+    label =  round(num_spam / num_trees);
 end
