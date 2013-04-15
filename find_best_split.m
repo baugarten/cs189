@@ -1,4 +1,4 @@
-function [ best_feature, best_split ] = find_best_split( data_labels, k )
+function [ best_feature, best_split ] = find_best_split( data_labels, impurity_method, k )
 %FIND_BEST_SPLIT Summary of this function goes here
 %   Detailed explanation goes here
 n_features = size(data_labels, 2) - 1;
@@ -19,8 +19,8 @@ for feature=1:n_features,
     % percentage of messages classified as spam on either side of the value
     frac_spam_lte = cumsum(spam_counts) ./ count_lte;
     frac_spam_geq = rcumsum(spam_counts) ./ count_geq;
-    entropy_lte = compute_entropy(frac_spam_lte);
-    entropy_geq = compute_entropy(frac_spam_geq);
+    entropy_lte = compute_entropy(frac_spam_lte, impurity_method);
+    entropy_geq = compute_entropy(frac_spam_geq, impurity_method);
     entropy_gt = shiftl(entropy_geq, 1);
     count_gt = shiftl(count_geq, 1);
     % compute the information gains.
