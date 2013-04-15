@@ -4,7 +4,7 @@ function [ entropy ] = compute_entropy( frac, method )
 if nargin < 2 || strcmpi(method, 'entropy')
     entropy = - frac .* log(frac) - (1 - frac) .* log(1 - frac);
 elseif strcmpi(method, 'variance')
-    entropy = frac * (1 - frac);
+    entropy = frac .* (1 - frac);
 elseif strcmpi(method, 'misclassification')
     entropy = 1 - max(frac, (1 - frac));
 end
