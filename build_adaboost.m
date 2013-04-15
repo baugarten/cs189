@@ -4,7 +4,7 @@ function [adaboost] = build_adaboost(data_labels, T)
     % initialize
     [n, d] = size(data_labels);
     weights = zeros(1,T);
-    classifiers = {};
+    classifiers = cell(1,T);
     dist = ones(n, 1)/n;
     depth = 1;
     data = data_labels(:, 1:d-1);
@@ -27,7 +27,7 @@ function [adaboost] = build_adaboost(data_labels, T)
         reweight = misclassifications .* exp(alpha_weight) + ...
                 correct .* exp(-alpha_weight);
         dist = dist .* reweight;
-        dist = dist / sum(dist);
+        dist = dist ./ sum(dist);
 
         classifiers{t} = stump;
     end
