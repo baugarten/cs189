@@ -1,13 +1,14 @@
-function [ best_feature, best_split ] = find_best_split( data_labels )
+function [ best_feature, best_split ] = find_best_split( data_labels, k )
 %FIND_BEST_SPLIT Summary of this function goes here
 %   Detailed explanation goes here
-n_datapoints = size(data_labels, 1);
 n_features = size(data_labels, 2) - 1;
-min_entropy = Inf;
+k_best = zeros(k, 3);
+k_best(:, 1) = Inf;
+index_worst = 1;
 for feature=1:n_features,
     feature_vect = data_labels(:, feature);
     % get a sorted list of unique values
-    [feature_values, ia, indices] = unique(feature_vect);
+    [feature_values, ~, indices] = unique(feature_vect);
     % sum up labels, grouped by feature value
     spam_counts = accumarray(indices, data_labels(:, end));
     total_counts = accumarray(indices, 1);
@@ -24,13 +25,18 @@ for feature=1:n_features,
     count_gt = shiftl(count_geq, 1);
     % compute the information gains.
     new_entropy = count_lte .* entropy_lte + count_gt .* entropy_gt;
-    [current_min_entropy, index] = min(new_entropy);
-    if current_min_entropy < min_entropy
-        min_entropy = current_min_entropy;
-        best_feature = feature;
-        best_split = feature_values(index);
+    % update the k_best array.
+    for index=1:size(new_entropy, 1),
+        if new_entropy(index) < k_best(index_worst, 1)
+            k_best(index_worst, :) = [new_entropy(index), feature, feature_values(index)];
+            [~, index_worst] = max(k_best(:, 1));
+        end
     end
 end
+rand_index = randi(k, 1);
+chosen = k_best(rand_index, :);
+best_feature = chosen(2);
+best_split = chosen(3);
 end
 
 function [ result ] = rcumsum( vector )
