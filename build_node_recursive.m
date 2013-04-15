@@ -1,7 +1,7 @@
 function [ node ] = build_node_recursive(data_labels, dist, depth)
     labels = data_labels(:, end);
 
-    if depth == 0|| all(labels == labels(1))
+    if depth == 0 || all(labels == labels(1))
         node = build_leaf(labels);
     else
         [feature, split] = find_best_split(data_labels, dist);

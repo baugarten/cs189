@@ -5,7 +5,7 @@ function [ best_feature, best_split ] = find_best_split(data_labels, dist)
 
     % Defaults
     if dist == 0
-        dist = ones(1, n_datapoints);
+        dist = ones(n_datapoints, 1);
     end
 
     for feature=1:n_features,
