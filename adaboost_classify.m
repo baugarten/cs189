@@ -8,8 +8,8 @@ function [class] = adaboost_classify(adaboost, feature_vector)
 
     accum = 0;
     for t=1:T
-        cur_tree = classifiers{t};
-        accum = accum + weights(t) * tree_classify(cur_tree, feature_vector);
+        cur_stump = classifiers{t};
+        accum = accum + weights(t) * stump_classify(cur_stump, feature_vector);
     end
 
     class = sign(accum);

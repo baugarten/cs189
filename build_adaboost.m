@@ -12,10 +12,10 @@ function [adaboost] = build_adaboost(data_labels, T)
 
     % train weak classifiers
     for t=1:T
-        fprintf('Training stump %d\n', t);
         % get stump with error
-        [stump] = build_node_recursive(data_labels, dist, depth); 
-        [weak_error, predictions] = evaluate_tree(stump, data, labels);
+        stump = build_stump(data_labels, dist); 
+        fprintf('Trained stump %d\n', t);
+        [weak_error, predictions] = evaluate_stump(stump, data, labels);
         misclassifications = predictions ~= labels;
         correct = predictions == labels;
 

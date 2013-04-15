@@ -4,5 +4,5 @@ function [error_rate, predictions] = evaluate_adaboost(root, data, labels)
     for j=1:m,
         predictions(j) = adaboost_classify(root, data(j, :));
     end
-    error_rate = sum(predictions ~= labels) ./ m;
+    error_rate = sum(predictions ~= labels) / m;
 end

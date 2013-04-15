@@ -16,7 +16,7 @@ function [ best_feature, best_split ] = find_best_split(data_labels, dist)
 
         % sum up labels, grouped by feature value
         spam_counts = accumarray(indices, data_labels(:, end) .* dist);
-        total_counts = accumarray(indices, 1);
+        total_counts = accumarray(indices, dist);
 
         % get counts for <= and >
         count_lte = cumsum(total_counts);
@@ -24,8 +24,6 @@ function [ best_feature, best_split ] = find_best_split(data_labels, dist)
 
         % do a cumulative sum from both the bottom and top to get the
         % percentage of messages classified as spam on either side of the value
-        %frac_spam_lte = cumsum(spam_counts) ./ count_lte;
-        %frac_spam_geq = rcumsum(spam_counts) ./ count_geq;
         frac_spam_lte = cumsum(spam_counts);
         frac_spam_geq = rcumsum(spam_counts);
         entropy_lte = compute_entropy(frac_spam_lte);
