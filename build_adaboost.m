@@ -6,32 +6,31 @@ function [adaboost] = build_adaboost(data_labels, T)
     weights = zeros(1,T);
     classifiers = cell(1,T);
     dist = ones(n, 1)/n;
-    depth = 1;
+    depth = 2;
     data = data_labels(:, 1:d-1);
     labels = data_labels(:, end);
+    dists = zeros(n,T);
 
     % train weak classifiers
     for t=1:T
         % get stump with error
-        stump = build_stump(data_labels, dist); 
+        stump = build_node_recursive(data_labels, dist, depth); 
         fprintf('Trained stump %d\n', t);
-        [weak_error, predictions] = evaluate_stump(stump, data, labels);
-        misclassifications = predictions ~= labels;
-        correct = predictions == labels;
+        [weak_error, predictions] = evaluate_tree(stump, data, labels);
+        predictions(predictions == 0) = -1;
 
         % Choose \alpha_t
-        weights(t) = 0.5 * log((1 - weak_error) / weak_error);
+        weights(t) = 0.5 * (log1p(-weak_error) - log(weak_error));
 
         % update and normalize
-        alpha_weight = ones(n, 1) * weights(t);
-        reweight = misclassifications .* exp(alpha_weight) + ...
-                correct .* exp(-alpha_weight);
-        dist = dist .* reweight;
+        dists(:, t) = dist;
+        dist = dist .* exp(-weights(t) .* labels .* predictions);
         dist = dist ./ sum(dist);
 
         classifiers{t} = stump;
     end
 
-    adaboost = struct('weights', weights, 'classifiers', {classifiers});
+    adaboost = struct('weights', weights, 'classifiers', {classifiers}, ...
+                        'dists', dists);
     disp('Finished adaboost construction');
 end

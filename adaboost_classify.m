@@ -9,8 +9,15 @@ function [class] = adaboost_classify(adaboost, feature_vector)
     accum = 0;
     for t=1:T
         cur_stump = classifiers{t};
-        accum = accum + weights(t) * stump_classify(cur_stump, feature_vector);
+
+        if tree_classify(cur_stump, feature_vector) == 0
+            h_t = -1;
+        else
+            h_t = 1;
+        end
+
+        accum = accum + weights(t) * h_t;
     end
 
-    class = sign(accum);
+    class = accum > 0;
 end
