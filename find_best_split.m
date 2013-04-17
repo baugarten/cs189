@@ -1,6 +1,7 @@
-function [ best_feature, best_split ] = find_best_split( data_labels, impurity_method, k )
+function [ best_feature, best_split, impurity_reduction ] = find_best_split( data_labels, impurity_method, k )
 %FIND_BEST_SPLIT Summary of this function goes here
 %   Detailed explanation goes here
+n_datapoints = size(data_labels, 1);
 n_features = size(data_labels, 2) - 1;
 if k > 1
   features = randsample(n_features, k);
@@ -12,13 +13,15 @@ end
 k_best = zeros(k, 3);
 k_best(:, 1) = Inf;
 index_worst = 1;
+labels = data_labels(:, end);
+old_entropy = compute_entropy(sum(labels) ./ n_datapoints, impurity_method);
 for i=1:n_features,
     feature = features(i);
     feature_vect = data_labels(:, feature);
     % get a sorted list of unique values
     [feature_values, ~, indices] = unique(feature_vect);
     % sum up labels, grouped by feature value
-    spam_counts = accumarray(indices, data_labels(:, end));
+    spam_counts = accumarray(indices, labels);
     total_counts = accumarray(indices, 1);
     % get counts for <= and >
     count_lte = cumsum(total_counts);
@@ -43,8 +46,10 @@ for i=1:n_features,
 end
 rand_index = randi(k, 1);
 chosen = k_best(rand_index, :);
+new_entropy = chosen(1);
 best_feature = chosen(2);
 best_split = chosen(3);
+impurity_reduction = (old_entropy - new_entropy) ./ old_entropy;
 end
 
 function [ result ] = rcumsum( vector )
