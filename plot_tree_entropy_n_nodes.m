@@ -1,4 +1,4 @@
-function [ output_args ] = plot_tree_entropy_n_nodes( Xtrain, ytrain, Xtest, ytest, min, max )
+function [ xspace, errors ] = plot_tree_entropy_n_nodes( Xtrain, ytrain, Xtest, ytest, min, max )
 %PLOT_TREE_ENTROPY_N_NODES Summary of this function goes here
 %   Detailed explanation goes here
 xspace = min:max;
@@ -8,5 +8,7 @@ for n=min:max,
     errors(n) = evaluate_tree(node, Xtest, ytest);
 end
 plot(xspace, errors);
+xlabel('Minimum number of nodes in leaves')
+ylabel('Error Rate')
 end
 
