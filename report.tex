@@ -4,6 +4,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{hyperref}
 \author{Ben Augarten, Richard Hwang, Max Johnson}
 \title{CS 189: HW5 Report}
 \begin{document}
@@ -29,10 +30,17 @@
 \subsection{Decision Trees}
 We implemented Decision Trees with 2 different stopping criteria: Stopping based on the number of points, and stopping based on the reduction of impurity. We also implemented three different impurity functions; Entropy, Gina Impurity, and Misclassification.
 
+\subsubsection{Stopping Criteria}
 Entropy, fully grown: 0.0788\\
 Entropy, with leaves of at least 26 nodes: 0.0755\\
 Entropy, error vs n nodes:\\
 \includegraphics[width=\textwidth]{decision_tree_entropy_error_vs_n_nodes.png}
+Entropy, fully grown: 0.0788\\
+Entropy, with an impurity reduction cutoff of 0.6: 0.0781
+Entropy, error vs n nodes:\\
+\includegraphics[width=\textwidth]{decision_tree_entropy_error_vs_imp_red.png}
+
+\subsubsection{Impurity Functions}
 Variance, fully grown: 0.0872 \\
 Variance, with leaves of at least 7 nodes: 0.0846 \\
 Variance, error vs n nodes:\\
@@ -43,12 +51,21 @@ Misclassification, error vs n nodes:\\
 \includegraphics[width=\textwidth]{decision_tree_misclassification_error_vs_n_nodes.png}
 
 \subsection{Random Forests}
-Random Feature Selection
-Random selection from top-k split points
+\subsubsection{Random feature selection}
+
+\subsubsection{Random selection from top-k split points}
 
 \subsection{Boosted Trees}
-Best error rate: 
+We implemented the AdaBoost algorithm by boosting weak decsion trees of depth 2. We found this worked better than stumps, as too many of the stumps were identical. \\
+With 750 trees, we achieved an error rate of 0.0964. \\
+\includegraphics[width=\textwidth]{adaboost.png}
+
 
 \section{References}
+\begin{itemize}
+\item Included Materials
+\item \url{http://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm}
+\item \url{http://en.wikipedia.org/wiki/Random_forest}
+\end{itemize}
 
 \end{document}
