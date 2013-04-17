@@ -10,6 +10,8 @@ function [adaboost] = build_adaboost(data_labels, T)
     data = data_labels(:, 1:d-1);
     labels = data_labels(:, end);
     dists = zeros(n,T);
+    labels_neg = labels;
+    labels_neg(labels == 0) = -1;
 
     % train weak classifiers
     for t=1:T
@@ -24,7 +26,7 @@ function [adaboost] = build_adaboost(data_labels, T)
 
         % update and normalize
         dists(:, t) = dist;
-        dist = dist .* exp(-weights(t) .* labels .* predictions);
+        dist = dist .* exp(-weights(t) .* labels_neg .* predictions);
         dist = dist ./ sum(dist);
 
         classifiers{t} = stump;
