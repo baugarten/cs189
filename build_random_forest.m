@@ -8,5 +8,6 @@ forest = {};
 for i=1:n_trees
     tree = build_node_recursive(data_labels, impurity_method, k);
     forest{i} = tree;
+    disp(strcat('Train tree ', num2str(i)));
 end
 end
