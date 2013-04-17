@@ -52,14 +52,18 @@ Misclassification, error vs n nodes:\\
 
 \subsection{Random Forests}
 \subsubsection{Random feature selection}
+Achieved an error rate of 0.0456 with a forest of 150 nodes selecting splits from 5 random features.
 
 \subsubsection{Random selection from top-k split points}
+Achieved an error rate of 0.0612 with a forest of 200 trees, selecting from the top 200 nodes.
 
 \subsection{Boosted Trees}
 We implemented the AdaBoost algorithm by boosting weak decsion trees of depth 2. We found this worked better than stumps, as too many of the stumps were identical. \\
 With 750 trees, we achieved an error rate of 0.0964. \\
 \includegraphics[width=\textwidth]{adaboost.png}
 
+\section{Summary}
+We achieved the best result using Random Forests with random feature selection. The best error rate we achieved was 4.6\%.
 
 \section{References}
 \begin{itemize}
