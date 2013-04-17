@@ -27,9 +27,9 @@ function [ node ] = build_node( feature, split, lte_node, gt_node )
 end
 
 function [ node ] = build_leaf( labels, dist )
-    label = mode(labels);
-    %pos_weight = labels' * dist;
-    %neg_weight = (~labels)' * dist;
-    %label = pos_weight > neg_weight;
+    %label = mode(labels);
+    pos_weight = labels' * dist;
+    neg_weight = (~labels)' * dist;
+    label = pos_weight > neg_weight;
     node = struct('is_leaf', true, 'label', label);
 end

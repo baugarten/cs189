@@ -18,7 +18,8 @@ function [adaboost] = build_adaboost(data_labels, T)
         % get stump with error
         stump = build_node_recursive(data_labels, dist, depth); 
         fprintf('Trained stump %d\n', t);
-        [weak_error, predictions] = evaluate_tree(stump, data, labels);
+        %[weak_error, predictions] = evaluate_tree(stump, data, labels);
+        [weak_error, predictions] = evaluate_tree_dist(stump, data, labels, dist);
         predictions(predictions == 0) = -1;
 
         % Choose \alpha_t
