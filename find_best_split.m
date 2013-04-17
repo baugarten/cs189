@@ -35,7 +35,7 @@ for i=1:n_features,
     entropy_gt = shiftl(entropy_geq, 1);
     count_gt = shiftl(count_geq, 1);
     % compute the information gains.
-    new_entropy = count_lte .* entropy_lte + count_gt .* entropy_gt;
+    new_entropy = (count_lte .* entropy_lte + count_gt .* entropy_gt) ./ n_datapoints;
     % update the k_best array.
     for index=1:size(new_entropy, 1),
         if new_entropy(index) < k_best(index_worst, 1)

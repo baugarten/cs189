@@ -9,6 +9,7 @@ if nargin < 3
 end
 if nargin < 4
     stopping_criteria = 'none';
+    stopping_param = 0;
 end
     
 labels = data_labels(:, end);
