@@ -16,14 +16,14 @@ function [adaboost] = build_adaboost(data_labels, T)
     % train weak classifiers
     for t=1:T
         % get stump with error
-        stump = build_node_recursive(data_labels, 'entropy', 1, 'none', ...
-                                     0, dist, depth); 
-        fprintf('Trained stump %d\n', t);
+        stump = build_node_recursive(data_labels, 'entropy', 1, 'none', 0, ...
+                                     dist, depth);
+        fprintf('Trained stump %d.\n', t);
         [weak_error, predictions] = evaluate_tree_dist(stump, data, labels, dist);
         predictions(predictions == 0) = -1;
 
         % Choose \alpha_t
-        weights(t) = 0.5 * (log1p(-weak_error) - log(weak_error));
+        weights(t) = (0.5/log(2)) * (log1p(-weak_error) - log(weak_error));
 
         % update and normalize
         dists(:, t) = dist;

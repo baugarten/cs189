@@ -17,7 +17,7 @@ function [ node ] = ...
         dist = 0;
         depth = -1;
     end
-        
+
     labels = data_labels(:, end);
     if depth == 0 || all(labels == labels(1)) || ...
             strcmpi(stopping_criteria, 'n_nodes') && size(labels, 1) < stopping_param
@@ -32,8 +32,8 @@ function [ node ] = ...
         end
         feature_column = data_labels(:, feature);
         index = find(feature_column <= split, 1, 'last');
-        lte_data_labels = data_labels(1:index, :);
-        gt_data_labels = data_labels(index+1:end, :);
+        lte_data_labels = data_labels(1:index, 1:end-1);
+        gt_data_labels = data_labels(index+1:end, 1:end-1);
         dist_column = data_labels(:, end);
         if 0 == size(gt_data_labels, 1) || ...
                 strcmpi(stopping_criteria, 'impurity_reduction') && ...
