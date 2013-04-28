@@ -1,30 +1,21 @@
-function [eigenfaces] = get_eigenfaces(directory)
+function [eigenfaces, eigenvalues] = get_eigenfaces(directory, top_k)
     image_mat = build_image_mat(directory);
     T = bsxfun(@minus, image_mat, mean(image_mat));
     T_transT = T*T';
     size(T)
     size(T_transT)
-    [eigenvectors, eigenvalues] = eig(T_transT);
-    size(eigenvalues(:))
-    eigenvalues_arr = diag(eigenvalues);
-    [sortedValues, sortIndex] = sort(eigenvalues_arr, 'descend');
-    maxIndex = sortIndex(1:10);
-    eigenvalues_arr(maxIndex)
-    eigenvectors(:,maxIndex)
-    size(image_mat(maxIndex,:))
+    [eigenfaces, eigenvalues] = eig(T_transT);
     
-    
-    mask = load('mask.mat');
-    mask = mask.mask;
-    unmasked_pixels = find(mask);
-    top_eigenfaces = image_mat(maxIndex,:);
-    for i=1:size(top_eigenfaces)
-        im_pixels = top_eigenfaces(i,:);
-        full_im = zeros(size(mask));
-        full_im(unmasked_pixels) = im_pixels;
-        imagesc(full_im ./ 255);
-        figure;
-    end
+    if nargin > 1
+        eigenvalues_arr = diag(eigenvalues);
+        [sortedValues, sortIndex] = sort(eigenvalues_arr, 'descend');
+        maxIndex = sortIndex(1:top_k);
+
+        
+        eigenfaces = image_mat(maxIndex,:);
+        eigenvalues = diag(eigenvalues_arr(maxIndex));
+        
+        
     
 %    eigenvectors(maxIndex,:)
     
