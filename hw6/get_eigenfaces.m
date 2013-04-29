@@ -2,8 +2,6 @@ function [eigenfaces, eigenvalues] = get_eigenfaces(directory, top_k)
     image_mat = build_image_mat(directory);
     T = bsxfun(@minus, image_mat, mean(image_mat));
     T_transT = T*T';
-    size(T)
-    size(T_transT)
     [eigenfaces, eigenvalues] = eig(T_transT);
     
     if nargin > 1

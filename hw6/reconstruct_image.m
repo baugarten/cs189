@@ -4,11 +4,14 @@ function [] = reconstruct_image(eigenfaces, eigenvalues, mean, image)
     reconst_image = mean; % reconstructed image
     deviation = image - mean;
     for i=1:size(eigenfaces, 1)
-        a_i = deviation * transpose(eigenfaces(i,:)); % get a dot product
+        size(deviation)
+        size(eigenfaces(i,:))
+        dot(deviation, eigenfaces(i,:))
+        a_i = dot(deviation, eigenfaces(i,:)); % get a dot product
         reconst_image = reconst_image + a_i * eigenfaces(i,:);
     end
     im = unmask_image(mask, reconst_image);
-    im ./ max(im(:))
-    imagesc(im);
-    
+    imagesc(im ./ max(im(:)));
+    figure
+    imagesc(unmask_image(mask, image));
 end
