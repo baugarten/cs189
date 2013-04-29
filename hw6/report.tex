@@ -5,9 +5,14 @@
 \item
 \begin{enumerate}
 \item
-The variations correspond to facial hair, skin color, eye color, hair color, lighting, smile type and eye positioning/wrinkles. You can visualize these by running visualize_eigenfaces()
+The variations correspond to facial hair, hair, skin color, eye color, hair color, lighting, smile type and eye positioning/wrinkles. You can visualize these by running visualize\_eigenfaces()
 \item
+To visualize the faces side by side using 10 eigenfaces, run
+compare\_faces(index), where index is the ith celebrity face to reconstruct
 
+Note, I didn't have very much success with 10 eigenfaces. I found that using more around 50 produced better results in reconstruction.\\
+You can change this number within the compare\_faces function, just pass another parameter,\\
+compare\_faces(index, num\_eigenfaces)
 \end{enumerate}
 \end{enumerate}
 \end{document}
