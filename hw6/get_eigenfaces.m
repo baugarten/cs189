@@ -14,7 +14,10 @@ function [eigenfaces, eigenvalues] = get_eigenfaces(directory, top_k)
 
     eigenfaces = zeros(size(evecs, 2), size(image_mat, 2));
     for i=1:size(evecs, 2)
-        eigenfaces(i,:) = T' * evecs(:,i);
+        for j=1:size(image_mat)
+            eigenfaces(i,:) = eigenfaces(i,:) + transpose(evecs(j,i)*T(j,:)');
+        end
+        %eigenfaces(i,:) = T' * evecs(:,i);
     end
     eigenfaces = normc(eigenfaces');
     eigenfaces = eigenfaces';

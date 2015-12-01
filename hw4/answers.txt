@@ -1,0 +1,5 @@
+1)
+Deriving the batch gradient descent equations for logistic regression with l_2 regularization:
+Using the same notation in class, mu(x) = 1/(1+ exp(-B^T x)), eta(x) = B^Tx,
+write the negative log likelihood with the regularization factor:
+\sum_i(y_i*ln(mu_i) + (1-y_i)*ln(1-mu_i)) + c||Beta||^2

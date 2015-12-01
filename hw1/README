@@ -1,0 +1,20 @@
+Running everything is easy.
+
+For problem 1,
+run the file code/prob1 with no arguments
+it will plot the results of the default parameters
+along with the concoction of parameters that I found worked best.
+
+For problem 2,
+run the file code/prob2
+I suggest running it with an argument.
+The default behavior is to plot a confusion matrix for each of the 7 training sets.
+Just pass in a numerical argument for which training set (1-7)
+i.e. prob2(1) 
+I find that the first training set its easiest to visualize the mistakes because there are more of them
+
+prob3 I didn't fully automate.
+I used the file prob3, using a small and giant bounds and a larger step size
+and then manually closed in on the ideal value of C.
+You can run prob3 to get a feel for how it works (its a little slow, you can
+adjust the step size)

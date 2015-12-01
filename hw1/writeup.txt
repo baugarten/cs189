@@ -1,0 +1,18 @@
+Ben Augarten
+SID: 22178913
+
+Problem 1:
+You can retrieve the plot by running code/prob1
+or view it in prob1.png
+I tuned some of the parameters using a script to get the best performance
+I could and plotted it against the default parameters, as seen in the image.
+My choice of c was 3.9e-7, B was 1000, and s was 2, achieving a minimum
+error rate of 9.25%
+
+Problem 2:
+From the confusion matrices I learned that the most often misclassified numbers are 5 and 9. 9 was often misclassified as an 8, 7, and 4, while the 5 was most often classified as a 3, and even a 9. The number most consistently classified correctly was 1, probably from is rather unique shape among numbers, then 7 and then 0, 3, 6 all roughly tied.
+
+Problem 3:
+Cross-validation could help get a rough estimate of the efficacy of the model on real world data while training it because it uses data that is independent of the data that was used to train it. This is important to measure the level of fit in the absence of test data. It seems to be an indicator as to how much the model (over)fits the data, with higher accuracies promising better results in the wild.
+The value of C that I found was optimal was 3.9e-7
+with the default options in place, using the largest data set to train the error rate was 9.46%
